@@ -278,34 +278,46 @@ from microbit import *
 from maqueen import *
 
 SPEED = 20
+THRESHOLD = 10
 
 motor_stop(Motor.ALL)
 heading_set_window_size(10)
 
 display.show(Image.HAPPY)
+h0 = mq_heading()
 sleep(2000)
-
 motor_run(Motor.ALL, SPEED)
 sleep(200)
 
-h0 = mq_heading()
-
+state = 'FORWARD'
 while True:
     dh = heading_diff(h0)
-    print(dh)
-    if dh > 10:
+    print(round(dh))
+    if button_a.was_pressed():
+        motor_stop()
+        compass.clear_calibration()
+        compass.calibrate()
+        sleep(5000)
+        h0 = mq_heading()
+        state = 'FORWARD'
+    if state == 'FORWARD':
+        motor_run(Motor.ALL, SPEED)
+        display.show(Image.ARROW_N) # arrow forward
+        if dh < -THRESHOLD:
+            state = 'TURN:RIGHT'
+        elif dh > THRESHOLD:
+            state = 'TURN:LEFT'
+    elif state == 'TURN:LEFT':
         display.show(Image.ARROW_E) # arrow left 
         motor_run(Motor.LEFT, SPEED - 5)
         motor_run(Motor.RIGHT, SPEED + 5)
-        sleep(20)
-        motor_run(Motor.LEFT, SPEED)        
-    elif dh < -10:
-        display.show(Image.ARROW_W) # arrow right
-        motor_run(Motor.RIGHT, SPEED - 5)
+        if dh <= 0:
+            state = 'FORWARD'
+    elif state == 'TURN:RIGHT':
+        display.show(Image.ARROW_W) # arrow right 
         motor_run(Motor.LEFT, SPEED + 5)
-        sleep(20)
-        motor_run(Motor.RIGHT, SPEED)
-    else:
-        display.show(Image.ARROW_N) # arrow forward
-    sleep(200)
+        motor_run(Motor.RIGHT, SPEED - 5)
+        if dh >= 0:
+            state = 'FORWARD'
+    sleep(20)
 ```
