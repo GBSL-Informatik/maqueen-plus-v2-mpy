@@ -285,7 +285,7 @@ heading_set_window_size(10)
 display.show(Image.HAPPY)
 sleep(2000)
 
-motor_run(Motor.ALL, Direction.FORWARD, SPEED)
+motor_run(Motor.ALL, SPEED)
 sleep(200)
 
 h0 = mq_heading()
@@ -295,16 +295,16 @@ while True:
     print(dh)
     if dh > 10:
         display.show(Image.ARROW_E) # arrow left 
-        motor_run(Motor.LEFT, Direction.FORWARD, SPEED - 5)
-        motor_run(Motor.RIGHT, Direction.FORWARD, SPEED + 5)
+        motor_run(Motor.LEFT, SPEED - 5)
+        motor_run(Motor.RIGHT, SPEED + 5)
         sleep(20)
-        motor_run(Motor.LEFT, Direction.FORWARD, SPEED)        
+        motor_run(Motor.LEFT, SPEED)        
     elif dh < -10:
         display.show(Image.ARROW_W) # arrow right
-        motor_run(Motor.RIGHT, Direction.FORWARD, SPEED - 5)
-        motor_run(Motor.LEFT, Direction.FORWARD, SPEED + 5)
+        motor_run(Motor.RIGHT, SPEED - 5)
+        motor_run(Motor.LEFT, SPEED + 5)
         sleep(20)
-        motor_run(Motor.RIGHT, Direction.FORWARD, SPEED)
+        motor_run(Motor.RIGHT, SPEED)
     else:
         display.show(Image.ARROW_N) # arrow forward
     sleep(200)

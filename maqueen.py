@@ -197,11 +197,11 @@ def line_sensor_data(sensor: int):
         return buffer[1] << 8 | buffer[0]
     elif sensor == LineSensor.ALL:
         return (
-            read_line_sensor_data(LineSensor.SENSOR_L2),
-            read_line_sensor_data(LineSensor.SENSOR_L1),
-            read_line_sensor_data(LineSensor.SENSOR_M),
-            read_line_sensor_data(LineSensor.SENSOR_R1),
-            read_line_sensor_data(LineSensor.SENSOR_R2)
+            line_sensor_data(LineSensor.SENSOR_L2),
+            line_sensor_data(LineSensor.SENSOR_L1),
+            line_sensor_data(LineSensor.SENSOR_M),
+            line_sensor_data(LineSensor.SENSOR_R1),
+            line_sensor_data(LineSensor.SENSOR_R2)
         )
 
 def ultrasonic(trig = pin13, echo = pin14):
