@@ -277,11 +277,13 @@ Drive forward straight, correcting the heading using the compass.
 from microbit import *
 from maqueen import *
 
-SPEED = 20
+SPEED = 40
+DT_TURN = SPEED // 10
 THRESHOLD = 10
+WINDOW_SIZE = 2 * THRESHOLD
 
 motor_stop(Motor.ALL)
-heading_set_window_size(10)
+heading_set_window_size(WINDOW_SIZE)
 
 display.show(Image.HAPPY)
 h0 = mq_heading()
@@ -299,6 +301,7 @@ while True:
         compass.calibrate()
     elif button_b.was_pressed():
         h0 = mq_heading()
+        heading_set_window_size(WINDOW_SIZE)
         state = 'FORWARD'
     if state == 'FORWARD':
         motor_run(Motor.ALL, SPEED)
@@ -309,15 +312,15 @@ while True:
             state = 'TURN:LEFT'
     elif state == 'TURN:LEFT':
         display.show(Image.ARROW_E) # arrow left 
-        motor_run(Motor.LEFT, SPEED - 5)
-        motor_run(Motor.RIGHT, SPEED + 5)
+        motor_run(Motor.LEFT, SPEED - DT_TURN)
+        motor_run(Motor.RIGHT, SPEED + DT_TURN)
         if dh <= 0:
             state = 'FORWARD'
     elif state == 'TURN:RIGHT':
         display.show(Image.ARROW_W) # arrow right 
-        motor_run(Motor.LEFT, SPEED + 5)
-        motor_run(Motor.RIGHT, SPEED - 5)
+        motor_run(Motor.LEFT, SPEED + DT_TURN)
+        motor_run(Motor.RIGHT, SPEED - DT_TURN)
         if dh >= 0:
             state = 'FORWARD'
-    sleep(20)
+    sleep(5)
 ```
