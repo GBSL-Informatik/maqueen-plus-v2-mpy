@@ -297,7 +297,7 @@ while True:
         motor_stop()
         compass.clear_calibration()
         compass.calibrate()
-        sleep(5000)
+    elif button_b.was_pressed():
         h0 = mq_heading()
         state = 'FORWARD'
     if state == 'FORWARD':
