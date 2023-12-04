@@ -70,6 +70,7 @@ _brightness = 0xff
 _heading_window_size = 1
 _heading_buffer = [0.0]
 _heading_buffer_index = 0
+_motor_calibration = [[], []]
 
 def I2CInit():
     version_v = 0
@@ -85,6 +86,54 @@ def I2CInit():
     sleep_ms(500)
     display.clear()
 
+def motor_calibration(motor: int, speed_factors: list):
+    '''
+    Maqueen robots tend to have different motor speeds.
+    You can provide factors for different speeds to inter/extrapolate
+    new speeds.
+    ```
+    motor_calibration(Motor.Right, [(20, 1.28), (200, 1.22)])
+    '''
+    if motor > 1:
+        print('No motor index', motor, 'found. Calibration is ignored')
+        return
+    _motor_calibration[motor] = sorted(speed_factors, key=lambda x: x[0])
+
+def _get_speed(motor: int, speed: int):
+    num_calibs = len(_motor_calibration[motor])
+    if motor > 1 or num_calibs == 0:
+        return speed
+    elif num_calibs == 1:
+        return int(_motor_calibration[motor][0][1] * speed)
+    elif num_calibs == 2:
+        calibs = _motor_calibration[motor]
+        x1 = calibs[0][0]
+        y1 = calibs[0][1]
+        x2 = calibs[1][0]
+        y2 = calibs[1][1]
+        m = (y2 - y1) / (x2 - x1)
+        factor = y1 + (speed - x1) * m
+        return int(factor * speed)
+    else:
+        calibs = _motor_calibration[motor]
+        cal2 = next(x for x in calibs if x[0] > speed)
+        idx_cal2 = calibs.index(cal2)
+        if idx_cal2 > 0:
+            cal1 = calibs[idx_cal2 - 1]
+        else:
+            cal1 = cal2
+            cal2 = calibs[idx_cal2 + 1]
+        x1 = cal1[0]
+        y1 = cal1[1]
+        x2 = cal2[0]
+        y2 = cal2[1]
+        m = (y2 - y1) / (x2 - x1)
+        factor = y1 + (speed - x1) * m
+        return int(factor * speed)
+        
+        
+    
+
 def motor_run(motor: int, speed: int, dir: int = Direction.FORWARD):
     '''
     Run the motor on the given speed.
@@ -92,16 +141,17 @@ def motor_run(motor: int, speed: int, dir: int = Direction.FORWARD):
     ```
     motor_run(Motor.ALL, speed=100, dir=Direction.Forward)
     ```
-    '''
+    '''    
     if speed < 0:
         speed = -speed
         dir = Direction.FORWARD if dir == Direction.BACKWARD else Direction.BACKWARD
+
     if motor == Motor.LEFT:
-        i2c.write(I2C_ADDR, bytearray([LEFT_MOTOR_REGISTER, dir, speed]))
+        i2c.write(I2C_ADDR, bytearray([LEFT_MOTOR_REGISTER, dir, _get_speed(motor, speed)]))
     elif motor == Motor.RIGHT:
-        i2c.write(I2C_ADDR, bytearray([RIGHT_MOTOR_REGISTER, dir, speed]))
+        i2c.write(I2C_ADDR, bytearray([RIGHT_MOTOR_REGISTER, dir, _get_speed(motor, speed)]))
     else:
-        i2c.write(I2C_ADDR, bytearray([LEFT_MOTOR_REGISTER, dir, speed, dir, speed]))
+        i2c.write(I2C_ADDR, bytearray([LEFT_MOTOR_REGISTER, dir, _get_speed(Motor.LEFT, speed), dir, _get_speed(Motor.RIGHT, speed)]))
 
 def motor_stop(motor: int = Motor.ALL):
     '''

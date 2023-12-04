@@ -65,6 +65,23 @@ motor_stop()
 motor_stop(Motor.LEFT)
 ```
 
+#### `motor_calibration(motor: int, calibration: list[tuple[float, float]])`
+
+The motors of the maqueen are not perfectly aligned. Therefore, a calibration can be applied to correct the speed of the motors.
+You can set one or more calibration points for each motor. The calibration points are tuples of the form `(speed, correction)`. The correction is a factor that is multiplied with given motor speeds. A correction of `1` means that the motor will not be corrected. A correction of 0.5 means that the motor will run at half the speed.
+
+```py
+# set calibration for left motor with 2 calibration points. Correction factors are interpolated linear.
+motor_calibration(Motor.LEFT, [(25, 1.3), (200, 1.2)])
+# set calibration for right motor with 1 calibration point
+motor_stop(Motor.RIGHT, [(100, 1.1)])
+# reset calibration for left motor
+motor_calibration(Motor.LEFT, [])
+
+# add multiple calibration points. The correction factors are interpolated linear
+motor_calibration(Motor.LEFT, [(25, 1.3), (50, 1.2), (100, 1.4), (200, 1.0)]) # => correction factor for speed 75 is 1.3
+```
+
 ### LED's
 
 ```py
