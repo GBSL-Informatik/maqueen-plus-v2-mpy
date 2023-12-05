@@ -2,8 +2,8 @@
 
 - [Maqueen Version](#mawueen-version)
 - [Motor](./motor.md)
-- [LED's rot](./leds-red.md)
-- [LED's RGB](./leds-rgb.md)
+- [LED's rot](./led-red.md)
+- [LED's RGB](./led-rgb.md)
 - [Liniensensor](./line-tracking.md)
 - [Ultraschallsensor](./ultrasonic.md)
 - [Kompass](./compass.md)
