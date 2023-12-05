@@ -1,13 +1,32 @@
+---
+sidebar_position: 1
+---
 # Motor
 
 Für die Steuerung der Motoren gibt es die Funktionen `motor_run` und `motor_stop`.
 
-### `motor_run(motor: int, speed: int)`
+## API
+
+Für die Motorsteuerung können folgende Konstanten benutzt werden
+
+```py
+class Motor:
+    LEFT = 0
+    RIGHT = 1
+    ALL = 2
+
+class Direction:
+    FORWARD = 0
+    BACKWARD = 1
+```
+
+### `motor_run(motor, speed)`
 Lässt den Motor mit der angegebenen Geschwindigkeit laufen.
 
 #### Parameter
-- `speed`: Werte von `-255` bis `255`. Ein negativer Wert lässt den Motor in die gegengesetzte Richtung drehen.
-- `dir`: optional, `Direction.FORWARD` or `Direction.BACKWARD`
+- `motor: int`: `Motor.LEFT`, `Motor.RIGHT` oder `Motor.ALL`
+- `speed: int`: Werte von `-255` bis `255`. Ein negativer Wert lässt den Motor in die gegengesetzte Richtung drehen.
+- `dir: int`: *optional*, `Direction.FORWARD` or `Direction.BACKWARD`
 
 #### Beispiel
 
@@ -25,10 +44,10 @@ motor_run(Motor.ALL, 255)
 
 ### `motor_stop()`
 
-Stoppt beide Motoren (oder optional den angegebenen Motor)
+Stoppt beide Motoren (oder *optional* den angegebenen Motor)
 
 #### Parameter
-- `motor`: optional, `Motor.LEFT`, `Motor.RIGHT` oder `Motor.ALL`
+- `motor`: *optional*, `Motor.LEFT`, `Motor.RIGHT` oder `Motor.ALL`
 
 #### Beispiel
 ```py

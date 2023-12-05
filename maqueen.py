@@ -305,7 +305,7 @@ def led_rgb(rgb: int, led: int = ColorLED.ALL, brightness: int = -1):
     ```
     led_rgb(Color.RED) # => all to red
     led_rgb(Color.RED, ColorLED.L1) # => L1 to red
-    led_rgb(ColorLED.L1, rgb(255, 10, 30))
+    led_rgb(rgb(255, 10, 30), ColorLED.L1)
     # led enumeration:
      /L1   R1\\
     |  -----  |
@@ -351,7 +351,7 @@ def led_rgb_off(led: int = ColorLED.ALL):
     '''
     if led < 0 or led > ColorLED.ALL:
         led = ColorLED.ALL
-    led_rgb(led, 0)
+    led_rgb(0, led)
 
 # compass tilt compensation: https://ozzmaker.com/compass2/
 
