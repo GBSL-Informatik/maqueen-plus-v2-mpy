@@ -44,16 +44,48 @@ Die Motoren des Maqueen Plus V2.0 sind nicht perfekt gleich. Mit dieser Funktion
 #### Parameter
 - `motor`: `Motor.LEFT` oder `Motor.RIGHT`
 - `calibration`: Liste von Tupeln mit Geschwindigkeit und dem Korrekturfaktor. Die Geschwindigkeit muss zwischen 0 und 255 liegen. Der Korrekturfaktor ist ein Wert > 0. Der Korrekturfaktor wird linear interpoliert.
+
+Die Kalibration kann durch das "Geradeausfahren lassen" des Maqueens eruiert werden:
+
+```py	
+from maqueen import *
+
+motor_calibration(Motor.LEFT, [(25, 1.3)])
+
+motor_run(Motor.ALL, 25)
+```
+Der Faktor `1.3` kann angepasst werden, bis der Maqueen geradeaus fährt.
+
 #### Beispiel
 
-```py
-# set calibration for left motor with 2 calibration points. Correction factors are interpolated linear.
-motor_calibration(Motor.LEFT, [(25, 1.3), (200, 1.2)])
-# set calibration for right motor with 1 calibration point
-motor_stop(Motor.RIGHT, [(100, 1.1)])
-# reset calibration for left motor
-motor_calibration(Motor.LEFT, [])
+Am besten wird ein zweiter Messpunkt bei Geschwindigkeit `200` eruiert und die Kalibration mit diesen beiden Punkten gesetzt:
 
-# add multiple calibration points. The correction factors are interpolated linear
-motor_calibration(Motor.LEFT, [(25, 1.3), (50, 1.2), (100, 1.4), (200, 1.0)]) # => correction factor for speed 75 is 1.3
+```py
+motor_calibration(Motor.LEFT, [(25, 1.3), (200, 1.2)])
+```
+
+Allenfalls kann auch ein dritter (oder mehr) Messpunkt gesetzt werden. Die Korrekturfaktoren werden linear interpoliert.
+
+```py
+
+motor_calibration(
+    Motor.LEFT,
+    [
+        (25, 1.3), 
+        (50, 1.2), 
+        (100, 1.4), 
+        (200, 1.0)
+    ]
+)
+
+motor_run(Motor.ALL, 75) # => Korrekturfaktor ist 1.3
+```
+
+#### Kalibration zurücksetzen
+Die Kalibration kann zurückgesetzt werden, indem eine leere Liste übergeben wird:
+
+```py
+# Kalibration zurücksetzen
+motor_calibration(Motor.LEFT, [])
+motor_calibration(Motor.RIGHT, [])
 ```
