@@ -1,6 +1,7 @@
 import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
+import deflistPlugin from './src/plugins/remark-deflist/plugin';
 
 const config: Config = {
   title: 'Maqueen Plus V2',
@@ -39,6 +40,16 @@ const config: Config = {
           // Remove this to remove the "edit this page" links.
           editUrl:
             'https://github.com/GBSL-Informatik/maqueen-plus-v2-mpy/tree/main/packages/create-docusaurus/templates/shared/',
+            remarkPlugins: [      
+                [
+                  deflistPlugin,
+                  {
+                      tagNames: {
+                          dl: 'Dl',
+                      },
+                  }
+              ],
+            ]
         },
         blog: false,
         theme: {

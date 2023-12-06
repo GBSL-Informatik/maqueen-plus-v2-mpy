@@ -1,0 +1,44 @@
+dl.dl {
+    display: grid;
+    grid-template-columns: 1.5fr 2fr;
+    column-gap: 1.2rem;
+    row-gap: 0.4rem;
+    grid-auto-flow: row;
+    margin-bottom: 1rem;
+}
+dl.dl dt {
+    grid-column: 1;
+    font-weight: bold;
+    text-align: right;
+    min-height: 1px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+dl.dl dd {
+    grid-column: 2;
+    overflow-x: auto;
+    margin-left: 0px;
+    overflow-y: hidden;
+    display: inline-block;
+}
+dl.dl dd + dd {
+    margin-top: -0.4em;
+}
+dt > p,
+dd > p {
+    margin: 0;
+}
+@media screen and (max-width: 620px) {
+    dl.dl {
+        grid-template-columns: 1fr;
+   }
+    dl.dl dt {
+        justify-content: left;
+   }
+    dl.dl dd {
+        grid-column: 1;
+   }
+}
