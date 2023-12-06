@@ -16,7 +16,6 @@ Kopieren Sie die Datei `maqueenplus.py` in den Projektordner, sie kann dann dire
 
 ![](images/microbit-project.png)
 
-
 ```py
 from maqueen import *
 
@@ -24,4 +23,11 @@ motor_run(Motor.LEFT, 100)
 sleep(150)
 motor_stop(Motor.LEFT)
 motor_run(Motor.ALL, 100)
+```
+
+## Bibliothek
+
+
+```py reference title="maqueen.py"
+https://github.com/GBSL-Informatik/maqueen-plus-v2-mpy/blob/main/maqueen.py
 ```

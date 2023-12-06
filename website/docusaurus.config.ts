@@ -102,6 +102,9 @@ const config: Config = {
       darkTheme: prismThemes.dracula,
     },
   } satisfies Preset.ThemeConfig,
+  plugins: [
+    '@saucelabs/theme-github-codeblock'
+  ]
 };
 
 export default config;

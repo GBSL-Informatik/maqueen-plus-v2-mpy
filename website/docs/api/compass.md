@@ -2,50 +2,72 @@
 sidebar_position: 6
 ---
 # Kompass
+Der Micro\:Bit enthält einen Magnetsensor (Magnetometer), welcher die Magnetfeldstärke (µT) in drei Dimensionen misst. Mit Hilfe des Magnetometers kann die Ausrichtung des Micro\:Bit relativ zum Erdmagnetfeld bestimmt werden. Norden ist dabei dort, wo die höchste Magnetkraft gemessen wird.
 
+Da für einen Kompass die Ausrichtung nur in der Ebene bestimmt werden soll, wird mit dem Beschleunigungssensor (Accelerometer) die Neigung des Micro\:Bit relativ zur Erdoberfläche bestimmt. Zusammen mit den Magnetometer Werten kann so die Ausrichtung mit der Funktion `heading` abgefragt werden:
 
-### Compass Heading
-Since the compass is mounted in the maqueen such that the y-axis points upwards and the z-axis points forward, the heading calculated by the micro:bit is not correct (it assumes the y-axis points forward and the z-axis points upwards).
+```py
+from microbit import *
+while True:
+    print('Ausrichtung: ', compass.heading())
+    sleep(1000)
+```
 
-Therefore, a tilt-compensated compass heading is calculated using the accelerometer and magnetometer data assuming the micro:bit is mounted in the maqueen.
+Der Micro\:Bit macht dabei die Annahme, dass die y-Achse nach vorne zeigt und die z-Achse nach oben. 
 
-#### `mq_heading()`
+![](images/microbit-axis-flat.webp)
 
-The heading is returned in degrees between 0 and 359. The heading is calculated using the accelerometer and magnetometer data.
+Da der Micro\:Bit aber im Maqueen so montiert ist, dass die y-Achse nach oben zeigt und die z-Achse nach vorne, ist die Annahme falsch und die Ausrichtung wird nicht mehr korrekt berechnet.
 
-! Pay attention to inferring the heading while the maqueen is moving, since the motors produce magnetic noise.
+### `mq_heading()`
+
+Gibt die Ausrichtung des Maqueen in Grad zwischen 0 und 359 zurück. Die Ausrichtung wird mit den Daten des Accelerometers und des Magnetometers berechnet.
+
+:::danger Elektromagnetische Störungen durch die Motoren
+Beachte, dass die Motoren des Maqueen elektromagnetische Störungen verursachen. Achte deshalb darauf, dass die Ausrichtung nur abgefragt wird, wenn die Drehgeschwindigkeiten der Motoren nicht verändert werden. Noch bessere Ergebnise werden erzielt, wenn die Motoren nicht laufen.
+:::
 
 ```py
 mq_heading() # => 0-359
 ```
 
-#### `heading_diff(heading0: float, apply_window: bool = True)`
+### `heading_diff(heading0)`
 
-Returns the difference between the current heading and the specified heading in degrees between -180 and 180.
+Gibt die Differenz zwischen der aktuellen Ausrichtung und der angegebenen Ausrichtung ( `heading0`) in Grad zwischen -180 und 180 zurück. Um die Resultate weniger störungsanfällig zu machen, wird ein *moving average filter* angewandt (Standardfenstergrösse ist 1). Die Fenstergrösse kann mit der Funktion [`heading_set_window_size`](#heading_set_window_sizesize) geändert werden.
 
-To get more stable results, a moving average filter is applied to the heading (default window size is 1). The window size can be changed by setting the global variable `heading_set_window_size` (see below).
+#### Parameter
+`heading0`
+: `float`
+: Die Referenz-Ausrichtung in Grad zwischen 0 und 359.
+`apply_window`
+: *optional*
+: `True` (default)
+: `False`
+
+#### Beispiel
 
 ```py
 initial_heading = 20
-# maqueen turned by 45 degrees to the right
+# maqueen um 45 ° nach rechts gedreht, d.h. die Ausrichtung ist jetzt 65 °
 heading_diff(initial_heading) # => 45
-# maqueen now turned by 90 degrees to the left
+# maqueen nun um 90 ° nach links gedreht, d.h. die Ausrichtung ist nun bei -25 °
 heading_diff(initial_heading) # => -45
 ```
-the moving average filter can be disabled by setting `apply_window` to `False`.
+
+Um die aktuelle Messung ohne Filterung zu erhalten, kann `apply_window` auf `False` gesetzt werden.
 
 ```py
 heading_diff(initial_heading, apply_window=False) # => -45
 ```
 
-#### `heading_set_window_size(size: int)`
-Sets the window size of the moving average filter used to calculate the heading difference.
+### `heading_set_window_size(size)` {#heading_set_window_sizesize}
+Setzt die Grösse des Filterfensters, welches bei der Berechnung der Ausrichtungsdifferenz benutzt wird.
 
 ```py
 heading_set_window_size(5) # => window size of 5
 ```
 
-To disable the moving average filter, set the window size to `1`.
+Um den Filter zu deaktivieren, kann die Fenstergrösse auf `1` gesetzt werden.
 
 ```py
 heading_set_window_size(1) # => no moving average filter
