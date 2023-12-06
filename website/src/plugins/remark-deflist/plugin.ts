@@ -4,7 +4,7 @@ import type { MdxJsxFlowElement } from 'mdast-util-mdx';
 import { Content, Parent, PhrasingContent, RootContent, Text } from 'mdast';
 
 // match to determine if the line is an opening tag
-const DD_REGEX = /(^|\r?\n):[ \t]+(.*?)/;
+const DD_REGEX = /(\r?\n):[ \t]+(.*?)/;
 const DD_CONSECUTIVE_REGEX = /^(\r?\n)?:[ \t]+(.*?)/;
 type ActionStates = 'SEEK_DD_START' | 'SEEK_CONSECUTIVE_DD_START' | 'COLLECT_DT_BODY' | 'COLLECT_DD_BODY' | 'ADD_TO_DL';
 
