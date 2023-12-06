@@ -101,6 +101,12 @@ const config: Config = {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
     },
+    algolia: {
+      appId: 'DZQL4GSKC5',
+      apiKey: 'be213675428649ead0b6e880830ccdbf',
+      indexName: 'maqueen-plus-v2-mpy',
+      contextualSearch: true,
+    },
   } satisfies Preset.ThemeConfig,
   plugins: []
 };
