@@ -4,7 +4,9 @@ sidebar_position: 1
 
 # Maqueen Plus V2.0
 
-Eine Bibliothek zur Steuerung des Maqueen Plus V2.0 mit Micro:bit und MicroPython.
+Eine Bibliothek zum Steuern und Auslesen von Sensordaten beim **Maqueen Plus V2.0** mit Micro:bit und **MicroPython**.
+
+![](images/maqueen-specs.jpg)
 
 ## Installation
 

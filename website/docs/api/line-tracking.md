@@ -3,6 +3,14 @@ sidebar_position: 4
 ---
 # Liniensensor
 
+![](images/maqueen-line-tracking.jpg)
+
+Für die Steuerung des Liniensensors kann die Funktion `line_sensor` verwendet werden.
+
+## API
+
+Für die Liniensensoren können folgende Konstanten benutzt werden:
+
 ```py
 class LineSensor:
     SENSOR_L1 = 0
@@ -13,8 +21,10 @@ class LineSensor:
     ALL = 5
 ```
 
-#### `line_sensor(sensor: int)`
-Returns the value of the specified line tracking sensor.
+### `line_sensor(sensor)`
+Gibt für den angegebenen Liniensensor an, ob er Schwarz (=`1`) oder Weiss (=`0`) sieht.
+
+Aus der Vogelperspektive sind die Sensoren wie folgt angeordnet:
 
 ```
    /''''^''''\
@@ -24,27 +34,68 @@ Returns the value of the specified line tracking sensor.
 o|.............|o
 ```
 
-```py
-line_sensor(LineSensor.M) # => 0 or 1
-```
+#### Parameter
+`sensor: int`
+: `LineSensor.SENSOR_L1`
+: `LineSensor.SENSOR_M`
+: `LineSensor.SENSOR_R1`
+: `LineSensor.SENSOR_L2`
+: `LineSensor.SENSOR_R2`
+: `LineSensor.ALL`
 
-When `LineSensor.ALL` is used, a 5-tuple with values of all sensors is returned. The order is clockwise starting with the leftmost sensor: `(L2, L1, M, R1, R2)`
 
-```py
-line_sensor(LineSensor.ALL) # => tuple of all sensors, (0, 1, 1, 0, 1)
-                            # => L1, M and R2 are on the line
-```
+#### Beispiel
 
-#### `line_sensor_data(sensor: int)`
-Returns the raw data of the specified line tracking sensor.
-
-```py
-line_sensor_data(LineSensor.M) # => 0-1023
-```
-
-When `LineSensor.ALL` is used, a 5-tuple with values of all sensors is returned. The order is clockwise starting with the leftmost sensor: `(L2, L1, M, R1, R2)`
+Den mittleren Sensor abfragen:
 
 ```py
-line_sensor_data(LineSensor.ALL) # => tuple of all sensors, (12, 1023, 721, 23, 222)
-                                 # => All sensors read a value between 0 and 1023
+line_sensor(LineSensor.M) # => 0 oder 1
 ```
+
+#### Beispiel `line_sensor(LineSensor.ALL)`
+
+Mit `line_sensor(LineSensor.ALL)` wird ein 5-Tupel mit den Werten von allen Fünf Liniensensoren zurückgegeben. Die Reihenfolge ist im Uhrzeigersinn, beginnend mit dem linken Sensor: `(L2, L1, M, R1, R2)`
+
+```py
+line_sensor(LineSensor.ALL) # => Tupel aller Sensorwerte, (0, 1, 1, 0, 1)
+                            #    -> L1, M und R2 sind auf der Linie
+```
+
+### `line_sensor_data(sensor)`
+Gibt die Rohdaten des angegebenen Liniensensors zurück. Je näher der Sensorwert bei `0` ist, desto dunkler ist die gemessene Farbe. Je näher der Wert bei `255` ist, desto heller ist die gemessene Farbe. Für die Unterscheidung von Schwarz und Weiss kann bspw. folgender Schwellwert verwendet werden: 
+
+schwarz
+: `< 100`
+weiss
+: `> 100`
+
+#### Parameter
+`sensor: int`
+: `LineSensor.SENSOR_L1`
+: `LineSensor.SENSOR_M`
+: `LineSensor.SENSOR_R1`
+: `LineSensor.SENSOR_L2`
+: `LineSensor.SENSOR_R2`
+: `LineSensor.ALL`
+
+#### Beispiel
+```py
+line_sensor_data(LineSensor.M) # => 0-256
+```
+
+#### Beispiel `line_sensor_data(LineSensor.ALL)`
+
+Mit `line_sensor(LineSensor.ALL)` wird ein 5-Tupel mit den Rohwerten von allen Fünf Liniensensoren zurückgegeben. Die Reihenfolge ist im Uhrzeigersinn, beginnend mit dem linken Sensor: `(L2, L1, M, R1, R2)`
+
+```py
+line_sensor_data(LineSensor.ALL) # => Tupel aller Sensorwerte (12, 130, 50, 72, 77)
+                                 # => Alle Sensoren messen Werte zwischen 0 und 255
+```
+
+### Kalibrierung der Liniensensoren
+
+Die Liniensensoren wurden im Werk kalibriert. Sollte die Kalibrierung nicht mehr präzise sein, können die Sensoren neu kalibriert werden.
+1. Maqueen auf einer schwarzen Fläche positionieren (bspw. auf der Rückseite der beigelegten *Track Map*) 
+2. Den *Calibration Key* **5 Sekunden** gedrückt halten
+
+![](images/maqueen-linesensor-calibration.png)

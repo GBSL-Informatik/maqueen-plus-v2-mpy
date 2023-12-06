@@ -25,8 +25,13 @@ class Led:
 Schaltet die rote LED vorne am Maqueen ein oder aus.
 
 #### Parameter
-- `on: bool`: `True` oder `False` um die beiden LED ein- oder auszuschalten
-- `led: int`: *optional*, `Led.LEFT`, `Led.RIGHT` oder `Led.ALL`
+`on: bool`
+: `True` oder `False` um die beiden LED ein- oder auszuschalten
+`led: int`
+: *optional*
+: `Led.LEFT`
+: `Led.RIGHT`
+: `Led.ALL`
 
 #### Beispiel
 

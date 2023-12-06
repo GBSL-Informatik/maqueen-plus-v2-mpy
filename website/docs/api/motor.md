@@ -24,9 +24,16 @@ class Direction:
 Lässt den Motor mit der angegebenen Geschwindigkeit laufen.
 
 #### Parameter
-- `motor: int`: `Motor.LEFT`, `Motor.RIGHT` oder `Motor.ALL`
-- `speed: int`: Werte von `-255` bis `255`. Ein negativer Wert lässt den Motor in die gegengesetzte Richtung drehen.
-- `dir: int`: *optional*, `Direction.FORWARD` or `Direction.BACKWARD`
+`motor: int`
+: `Motor.LEFT`
+: `Motor.RIGHT`
+: `Motor.ALL`
+`speed: int[-255, 255]`
+: Werte von `-255` bis `255`. Ein negativer Wert lässt den Motor in die gegengesetzte Richtung drehen.
+`dir: int`
+: *optional*
+: `Direction.FORWARD`
+: `Direction.BACKWARD`
 
 #### Beispiel
 
@@ -47,7 +54,11 @@ motor_run(Motor.ALL, 255)
 Stoppt beide Motoren (oder *optional* den angegebenen Motor)
 
 #### Parameter
-- `motor`: *optional*, `Motor.LEFT`, `Motor.RIGHT` oder `Motor.ALL`
+`motor`
+: *optional*
+: `Motor.LEFT`
+: `Motor.RIGHT`
+: `Motor.ALL`
 
 #### Beispiel
 ```py
@@ -61,8 +72,11 @@ motor_stop(Motor.LEFT)
 
 Die Motoren des Maqueen Plus V2.0 sind nicht perfekt gleich. Mit dieser Funktion kann eine Kalibration mit den Geschwindigkeiten gesetzt werden.
 #### Parameter
-- `motor`: `Motor.LEFT` oder `Motor.RIGHT`
-- `calibration`: Liste von Tupeln mit Geschwindigkeit und dem Korrekturfaktor. Die Geschwindigkeit muss zwischen 0 und 255 liegen. Der Korrekturfaktor ist ein Wert > 0. Der Korrekturfaktor wird linear interpoliert.
+`motor`
+: `Motor.LEFT`
+: `Motor.RIGHT`
+`calibration`
+: Liste von Tupeln mit Geschwindigkeit und dem Korrekturfaktor. Die Geschwindigkeit muss zwischen 0 und 255 liegen. Der Korrekturfaktor ist ein Wert > 0. Der Korrekturfaktor wird linear interpoliert.
 
 Die Kalibration kann durch das "Geradeausfahren lassen" des Maqueens eruiert werden:
 

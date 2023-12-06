@@ -45,9 +45,19 @@ o|.............|o
 ```
 
 #### Parameter
-- `rgb: int`: Farbe als Integer. Siehe `Color` Konstanten oder die Hilfsfunktion [`rgb`](#rgb).
-- `led: int[0-4]`: *optional*, `ColorLED.L1`, `ColorLED.L2`, `ColorLED.R1`, `ColorLED.R2` oder `ColorLED.ALL`
-- `brightness: int[0-255]`: *optional*, Helligkeit der LED's. Standardmässig wird die globale Helligkeit verwendet. Siehe [`led_brightness`](#led_brightness) um die globale Helligkeit zu verändern.
+`rgb`
+: `int`
+: Farbe als Integer. Siehe `Color` Konstanten oder die Hilfsfunktion [`rgb`](#rgb).
+`led: int[0-4]`
+: *optional*
+: `ColorLED.L1`
+: `ColorLED.L2`
+: `ColorLED.R1`
+: `ColorLED.R2`
+: `ColorLED.ALL`
+`brightness: int[0-255]`
+: *optional*
+: Helligkeit der LED's. Standardmässig wird die globale Helligkeit verwendet. Siehe [`led_brightness`](#led_brightness) um die globale Helligkeit zu verändern.
 
 #### Beispiel
 ```py
@@ -81,7 +91,13 @@ led_brightness(0) # LED's aus
 Schaltet alle RGB-LED's aus (schwarz, `0`).
 
 #### Parameter
-- `led: int[0-4]`: *optional*, `ColorLED.L1`, `ColorLED.L2`, `ColorLED.R1`, `ColorLED.R2` oder `ColorLED.ALL`
+`led: int[0-4]`
+: *optional*
+: `ColorLED.L1`
+: `ColorLED.L2`
+: `ColorLED.R1`
+: `ColorLED.R2`
+: `ColorLED.ALL`
   
 #### Beispiel
 
@@ -95,9 +111,12 @@ led_rgb_off(ColorLED.L2) # schaltet die untere linke LED aus
 Hilfsfunktion um eine RGB-Farbe in einen Integer zu konvertieren.
 
 #### Parameter
-- `r: int[0-255]`: Rotanteil
-- `g: int[0-255]`: Grünanteil
-- `b: int[0-255]`: Blauanteil
+`r: int[0-255]`
+: Rotanteil
+`g: int[0-255]`
+: Grünanteil
+`b: int[0-255]`
+: Blauanteil
 
 #### Beispiel
 
