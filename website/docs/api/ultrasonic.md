@@ -3,16 +3,24 @@ sidebar_position: 5
 ---
 # Ultraschallsensor
 
+Der Ultraschallsensor misst die Entfernung zu einem Objekt in Zentimetern. Mit der Funktion `ultrasonic` kann die Entfernung gemessen werden.
 
-#### `ultrasonic()`
-Returns the distance in centimeters.
+## API
 
+### `ultrasonic()`
+Gibt die Entfernung in Zentimetern zurück. Die maximal messbare Entfernung beträgt 500 cm.
+
+#### Beispiel
 ```py
 ultrasonic() # => 0-500
 ```
 
-When the ultrasonic sensor is not connected to the default trigger `pin13` and echo `pin14`, you can specify the pins as arguments.
+## Konfiguration
+Wenn der Ultraschallsensor nicht an den Standard-Trigger `pin13` und Echo `pin14` angeschlossen ist, können die Pins als Argumente angegeben werden.
 
 ```py
+from microbit import pin0, pin1
+from maqueen import ultrasonic
+
 ultrasonic(trig=pin0, echo=pin1) # => 0-500
 ```
