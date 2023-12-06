@@ -27,7 +27,7 @@ const config: Config = {
   // may want to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: 'de',
-    locales: ['en', 'de'],
+    locales: ['de'],
   },
 
   presets: [
@@ -39,7 +39,7 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/GBSL-Informatik/maqueen-plus-v2-mpy/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/GBSL-Informatik/maqueen-plus-v2-mpy/tree/main/website/',
             remarkPlugins: [      
                 [
                   deflistPlugin,
@@ -106,6 +106,7 @@ const config: Config = {
       apiKey: 'be213675428649ead0b6e880830ccdbf',
       indexName: 'maqueen-plus-v2-mpy',
       contextualSearch: true,
+      searchPagePath: 'search'
     },
   } satisfies Preset.ThemeConfig,
   plugins: []
