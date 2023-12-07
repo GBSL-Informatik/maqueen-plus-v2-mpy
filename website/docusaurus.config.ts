@@ -76,6 +76,11 @@ const config: Config = {
                     label: 'Docs',
                 },
                 {
+                  type: 'docsVersionDropdown',
+                  position: 'right',
+                  dropdownActiveClassDisabled: true,
+                },
+                {
                     href: 'https://github.com/GBSL-Informatik/maqueen-plus-v2-mpy',
                     label: 'GitHub',
                     position: 'right',
