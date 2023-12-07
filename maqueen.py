@@ -1,5 +1,5 @@
 '''
-Version: 1.0.1
+Version: 2.0.0
 @see https://github.com/DFRobot/pxt-DFRobot_MaqueenPlus_v20/blob/master/maqueenPlusV2.ts
 '''
 from micropython import const
