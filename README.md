@@ -174,12 +174,11 @@ rgb(255, 128, 0) # => 16744448  (its hex value is 0xFF8000)
 
 ```py
 class LineSensor:
-    SENSOR_L1 = 0
-    SENSOR_M = 1
-    SENSOR_R1 = 2
-    SENSOR_L2 = 3
-    SENSOR_R2 = 4
-    ALL = 5
+    L1 = 0
+    M = 1
+    R1 = 2
+    L2 = 3
+    R2 = 4
 ```
 
 #### `line_sensor(sensor: int)`

@@ -8,6 +8,8 @@
 - [Ultraschallsensor](./ultrasonic.md)
 - [Kompass](./compass.md)
 
+Inspiriert von [👉 DFRobot pxt-DFRobot_MaqueenPlus_v20](https://github.com/DFRobot/pxt-DFRobot_MaqueenPlus_v20/blob/master/maqueenPlusV2.ts).
+
 ### Maqueen Version
 Gibt die Version des Mawueen-Boards zurück.
 

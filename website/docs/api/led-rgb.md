@@ -31,7 +31,7 @@ class Color:
 ```
 
 
-### `led_rgb(rgb)`
+### `led_rgb(rgb)` {#led_rgb}
 Steuert die Farbe der RGB-LED's. Standardmässig wird die gleiche Farbe für alle 4 LED's verwendet.
 
 Die Farb-LED's sind wie folgt angeordnet:
@@ -85,6 +85,10 @@ Setzt die globale Helligkeit der RGB-LED's.
 led_brightness(255) # volle Helligkeit
 led_brightness(0) # LED's aus
 ```
+
+:::warning
+Wenn die Helligkeit während dem Aufruf von [`led_rgb`](#led_rgb) auf `0` ist, so wird die Helligkeit wieder auf `255` gesetzt.
+:::
 
 ### `led_rgb_off()`
 

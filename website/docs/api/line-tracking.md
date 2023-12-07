@@ -13,12 +13,11 @@ Für die Liniensensoren können folgende Konstanten benutzt werden:
 
 ```py
 class LineSensor:
-    SENSOR_L1 = 0
-    SENSOR_M = 1
-    SENSOR_R1 = 2
-    SENSOR_L2 = 3
-    SENSOR_R2 = 4
-    ALL = 5
+    L1 = 0
+    M = 1
+    R1 = 2
+    L2 = 3
+    R2 = 4
 ```
 
 ### `line_sensor(sensor)`
@@ -36,12 +35,11 @@ o|.............|o
 
 #### Parameter
 `sensor: int`
-: `LineSensor.SENSOR_L1`
-: `LineSensor.SENSOR_M`
-: `LineSensor.SENSOR_R1`
-: `LineSensor.SENSOR_L2`
-: `LineSensor.SENSOR_R2`
-: `LineSensor.ALL`
+: `LineSensor.L1`
+: `LineSensor.M`
+: `LineSensor.R1`
+: `LineSensor.L2`
+: `LineSensor.R2`
 
 
 #### Beispiel
@@ -52,13 +50,15 @@ Den mittleren Sensor abfragen:
 line_sensor(LineSensor.M) # => 0 oder 1
 ```
 
-#### Beispiel `line_sensor(LineSensor.ALL)`
+### `line_sensor_all()`
 
-Mit `line_sensor(LineSensor.ALL)` wird ein 5-Tupel mit den Werten von allen Fünf Liniensensoren zurückgegeben. Die Reihenfolge ist im Uhrzeigersinn, beginnend mit dem linken Sensor: `(L2, L1, M, R1, R2)`
+Mit `line_sensor_all` wird ein 5-Tupel mit den Werten von allen Fünf Liniensensoren zurückgegeben. Die Reihenfolge ist im Uhrzeigersinn, beginnend mit dem linken Sensor: `(L2, L1, M, R1, R2)`
+
+#### Beispiel
 
 ```py
-line_sensor(LineSensor.ALL) # => Tupel aller Sensorwerte, (0, 1, 1, 0, 1)
-                            #    -> L1, M und R2 sind auf der Linie
+line_sensor_all()   # => Tupel aller Sensorwerte, (0, 1, 1, 0, 1)
+                    #    -> L1, M und R2 sind auf der Linie
 ```
 
 ### `line_sensor_data(sensor)`
@@ -71,25 +71,25 @@ weiss
 
 #### Parameter
 `sensor: int`
-: `LineSensor.SENSOR_L1`
-: `LineSensor.SENSOR_M`
-: `LineSensor.SENSOR_R1`
-: `LineSensor.SENSOR_L2`
-: `LineSensor.SENSOR_R2`
-: `LineSensor.ALL`
+: `LineSensor.L1`
+: `LineSensor.M`
+: `LineSensor.R1`
+: `LineSensor.L2`
+: `LineSensor.R2`
 
 #### Beispiel
 ```py
 line_sensor_data(LineSensor.M) # => 0-256
 ```
 
-#### Beispiel `line_sensor_data(LineSensor.ALL)`
+### `line_sensor_data_all()`
+Mit der Funktion `line_sensor_data_all` wird ein 5-Tupel mit den Rohwerten von allen 5 Liniensensoren zurückgegeben. Die Reihenfolge ist im Uhrzeigersinn, beginnend mit dem linken Sensor: `(L2, L1, M, R1, R2)`
 
-Mit `line_sensor(LineSensor.ALL)` wird ein 5-Tupel mit den Rohwerten von allen Fünf Liniensensoren zurückgegeben. Die Reihenfolge ist im Uhrzeigersinn, beginnend mit dem linken Sensor: `(L2, L1, M, R1, R2)`
+#### Beispiel
 
 ```py
-line_sensor_data(LineSensor.ALL) # => Tupel aller Sensorwerte (12, 130, 50, 72, 77)
-                                 # => Alle Sensoren messen Werte zwischen 0 und 255
+line_sensor_data_all()  # => Tupel aller Sensorwerte (12, 130, 50, 72, 77)
+                        # => Alle Sensoren messen Werte zwischen 0 und 255
 ```
 
 ### Kalibrierung der Liniensensoren

@@ -28,6 +28,9 @@ motor_run(Motor.ALL, 100)
 ## Bibliothek
 
 ````py
+'''
+@see https://github.com/DFRobot/pxt-DFRobot_MaqueenPlus_v20/blob/master/maqueenPlusV2.ts
+'''
 from micropython import const
 from microbit import i2c, display, Image, pin13, pin14, pin15, accelerometer, compass
 from machine import time_pulse_us
@@ -50,12 +53,11 @@ class Led:
     ALL = 2
 
 class LineSensor:
-    SENSOR_L1 = 0
-    SENSOR_M = 1
-    SENSOR_R1 = 2
-    SENSOR_L2 = 3
-    SENSOR_R2 = 4
-    ALL = 5
+    L1 = 0
+    M = 1
+    R1 = 2
+    L2 = 3
+    R2 = 4
 
 class Color:
     RED = 0xFF0000
@@ -212,74 +214,82 @@ def line_sensor(sensor: int):
     ```
     line_sensor(LineSensor.SENSOR_L1) # => 0 or 1
     ```
+    '''
+    i2c.write(I2C_ADDR, bytearray([LINE_STATE_REGISTER]))
+    data = i2c.read(I2C_ADDR, 1)
+    if sensor == LineSensor.L2:
+        return 1 if (data[0] & 0x10) == 0x10 else 0
+    elif sensor == LineSensor.L1:
+        return 1 if (data[0] & 0x08) == 0x08 else 0
+    elif sensor == LineSensor.M:
+        return 1 if (data[0] & 0x04) == 0x04 else 0
+    elif sensor == LineSensor.R1:
+        return 1 if (data[0] & 0x02) == 0x02 else 0
+    elif sensor == LineSensor.R2:
+        return 1 if (data[0] & 0x01) == 0x01 else 0
 
+def line_sensor_all():
+    '''
+    Read all line sensors at once.
     ```
-    line_sensor(LineSensor.ALL)
+    line_sensor_all()
     # => (left2, left1, middle, right1, right2) # => list[0 or 1]
     ```
     '''
     i2c.write(I2C_ADDR, bytearray([LINE_STATE_REGISTER]))
     data = i2c.read(I2C_ADDR, 1)
-    if sensor == LineSensor.SENSOR_L2:
-        return 1 if (data[0] & 0x10) == 0x10 else 0
-    elif sensor == LineSensor.SENSOR_L1:
-        return 1 if (data[0] & 0x08) == 0x08 else 0
-    elif sensor == LineSensor.SENSOR_M:
-        return 1 if (data[0] & 0x04) == 0x04 else 0
-    elif sensor == LineSensor.SENSOR_R1:
-        return 1 if (data[0] & 0x02) == 0x02 else 0
-    elif sensor == LineSensor.SENSOR_R2:
-        return 1 if (data[0] & 0x01) == 0x01 else 0
-    elif sensor == LineSensor.ALL:
-        return (
-             1 if (data[0] & 0x10) == 0x10 else 0,
-             1 if (data[0] & 0x08) == 0x08 else 0,
-             1 if (data[0] & 0x04) == 0x04 else 0,
-             1 if (data[0] & 0x02) == 0x02 else 0,
-             1 if (data[0] & 0x01) == 0x01 else 0
-        )
+    return (
+        1 if (data[0] & 0x10) == 0x10 else 0,
+        1 if (data[0] & 0x08) == 0x08 else 0,
+        1 if (data[0] & 0x04) == 0x04 else 0,
+        1 if (data[0] & 0x02) == 0x02 else 0,
+        1 if (data[0] & 0x01) == 0x01 else 0
+    )
 
 def line_sensor_data(sensor: int):
     '''
     Read the raw values of the line sensor.
     ```
-    line_sensor_data(LineSensor.SENSOR_L1) # => int
-    ```
-
-    ```
-    line_sensor_data(LineSensor.ALL)
-    # => (left2, left1, middle, right1, right2) # => list[int]
+    line_sensor_data(LineSensor.L1) # => int
     ```
     '''
     i2c.write(I2C_ADDR, bytearray([LINE_STATE_REGISTER]))
-    if sensor == LineSensor.SENSOR_L2:
+    if sensor == LineSensor.L2:
         i2c.write(I2C_ADDR, bytearray([ADC0_REGISTER]))
         buffer = i2c.read(I2C_ADDR, 2)
         return buffer[1] << 8 | buffer[0]
-    if sensor == LineSensor.SENSOR_L1:
+    if sensor == LineSensor.L1:
         i2c.write(I2C_ADDR, bytearray([ADC1_REGISTER]))
         buffer = i2c.read(I2C_ADDR, 2)
         return buffer[1] << 8 | buffer[0]
-    elif sensor == LineSensor.SENSOR_M:
+    elif sensor == LineSensor.M:
         i2c.write(I2C_ADDR, bytearray([ADC2_REGISTER]))
         buffer = i2c.read(I2C_ADDR, 2)
         return buffer[1] << 8 | buffer[0]
-    elif sensor == LineSensor.SENSOR_R1:
+    elif sensor == LineSensor.R1:
         i2c.write(I2C_ADDR, bytearray([ADC3_REGISTER]))
         buffer = i2c.read(I2C_ADDR, 2)
         return buffer[1] << 8 | buffer[0]
-    elif sensor == LineSensor.SENSOR_R2:
+    elif sensor == LineSensor.R2:
         i2c.write(I2C_ADDR, bytearray([ADC4_REGISTER]))
         buffer = i2c.read(I2C_ADDR, 2)
         return buffer[1] << 8 | buffer[0]
-    elif sensor == LineSensor.ALL:
-        return (
-            line_sensor_data(LineSensor.SENSOR_L2),
-            line_sensor_data(LineSensor.SENSOR_L1),
-            line_sensor_data(LineSensor.SENSOR_M),
-            line_sensor_data(LineSensor.SENSOR_R1),
-            line_sensor_data(LineSensor.SENSOR_R2)
-        )
+
+def line_sensor_data_all():
+    '''
+    Reads the raw values of all the line sensors.
+    ```
+    line_sensor_data_all()
+    # => (left2, left1, middle, right1, right2) # => tuple[int]
+    ```
+    '''
+    return (
+        line_sensor_data(LineSensor.L2),
+        line_sensor_data(LineSensor.L1),
+        line_sensor_data(LineSensor.M),
+        line_sensor_data(LineSensor.R1),
+        line_sensor_data(LineSensor.R2)
+    )
 
 def ultrasonic(trig = pin13, echo = pin14):
     '''
@@ -340,6 +350,8 @@ def led_rgb(rgb: int, led: int = ColorLED.ALL, brightness: int = -1):
     | L2   R2 |
     ```
     '''
+    if _brightness == 0 and brightness < 0:
+        led_brightness(255)
     if brightness < 0:
         brightness = _brightness
 
