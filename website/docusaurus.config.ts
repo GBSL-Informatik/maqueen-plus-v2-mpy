@@ -103,7 +103,7 @@ const config: Config = {
     },
     algolia: {
       appId: 'DZQL4GSKC5',
-      apiKey: 'be213675428649ead0b6e880830ccdbf',
+      apiKey: '109ba984408b45faf3d7034b3aebea8f',
       indexName: 'maqueen-plus-v2-mpy',
       contextualSearch: true,
       searchPagePath: 'search'
