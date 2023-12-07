@@ -15,7 +15,7 @@ while True:
 
 Der Micro\:Bit macht dabei die Annahme, dass die y-Achse nach vorne zeigt und die z-Achse nach oben. 
 
-![](images/microbit-axis-flat.webp)
+![](images/microbit-axis-flat.png)
 
 Da der Micro\:Bit aber im Maqueen so montiert ist, dass die y-Achse nach oben zeigt und die z-Achse nach vorne, ist die Annahme falsch und die Ausrichtung wird nicht mehr korrekt berechnet.
 

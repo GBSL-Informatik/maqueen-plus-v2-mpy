@@ -126,4 +126,33 @@ Hilfsfunktion um eine RGB-Farbe in einen Integer zu konvertieren.
 
 ```py
 rgb(255, 128, 0) # => 16744448  (oder als Hex-Wert: 0xFF8000)
+
+led_rgb(rgb(255, 128, 0)) # => LED's in orange
+```
+
+### `hsl(h, s, l)` {#hsl}
+
+Hilfsfunktion um eine HSL-Farbe in einen Integer zu konvertieren.
+
+#### Parameter
+
+`h: int[0-360]`
+: Farbton
+`s: int[0-100]`
+: Sättigung
+`l: int[0-100]`
+: Helligkeit - achtung, nicht zu verwechseln mit der globalen Helligkeit der LED's! Hier wird nur die Helligkeit der Farbe angegeben.
+
+<div style={{display: 'flex', justifyContent: 'center'}}>
+<div style={{maxWidth: '220px'}}>
+![](images/hsl-color-circle.png)
+</div>
+</div>
+
+#### Beispiel
+
+```py
+hsl(0, 100, 50) # => 16711680  (oder als Hex-Wert: 0xFF0000)
+
+led_rgb(hsl(0, 100, 50)) # => LED's in rot
 ```
