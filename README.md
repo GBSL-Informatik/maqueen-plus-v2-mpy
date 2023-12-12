@@ -1,8 +1,23 @@
 # Maqueen Plus v2
 Library to control maqueen plus v2 with micro:bit and micropython.
 
+## Dev: Versions
+For changes in the API:
+- minor version: no breaking changes, bug fixes, mostly irrelevant new features
+- major version: breaking changes, new features
+
+To release a new Version:
+1. [preparation] update the `version` comment (first Line) in `maqueen.py`
+2. [preparation] describe the changes in [website/docs/api/index.md](website/docs/api/index.md#changelog)
+3. commit all changes
+4. [docs] create a new Documentation Version (e.g `2.0.1`): `(cd website && yarn docusaurus docs:version 2.0.1)`
+5. commit and tag the version (e.g. `v2.0.1`)
+6. push the changes and the tag to github
+
+Github will build and deploy the new version of the documentation automatically.
+
 ## Installation
-Copy the file `maqueenplus.py` to your project folder micro:bit.
+Copy the file `maqueen.py` to your project folder micro:bit.
 
 ![](images/microbit-project.png)
 
