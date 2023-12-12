@@ -122,3 +122,17 @@ Die Kalibration kann zurückgesetzt werden, indem eine leere Liste übergeben wi
 motor_calibration(Motor.LEFT, [])
 motor_calibration(Motor.RIGHT, [])
 ```
+
+#### `motor_get_calibration(motor)`
+Gibt eine Kopie der aktuellen Kalibration für den angegebenen Motor zurück.
+
+#### Parameter
+`motor`
+: `Motor.LEFT`
+: `Motor.RIGHT`
+
+#### Beispiel
+
+```py
+motor_get_calibration(Motor.LEFT) # => [(25, 1.3), (200, 1.2)]
+```

@@ -17,7 +17,19 @@ Gibt die Version des Mawueen-Boards zurück.
 version() # => 'MBT0021-EN-2.1'
 ```
 
-### Changelog
+## Changelog
+
+### V2.0.1 (12.12.2023)
+
+Nur kleinere Anpassungen, keine Breaking Changes.
+
+#### 🎉 New Features
+- `motor_get_calibration(motor)`: Gibt eine Kopie der aktuellen Kalibration für den angegebenen Motor zurück.
+
+#### 🐛 Bug Fixes
+- `_get_speed` behebe Fehler, wenn Geschwindigkeit extrapoliert wird.
+
+### V2.0.0 (7.12.2023)
 
 #### 🧨 Breaking Changes
 - `LineSensor` hat jetzt die Werte `L1`, `L2`, `M`, `R1`, `R2` statt `SENSOR_L1`, `SENSOR_L2`, `SENSOR_M`, `SENSOR_R1`, `SENSOR_R2`. ⚠️ `SENSOR_ALL` wurde entfernt. Verwende stattdessen `line_sensor_all()`.

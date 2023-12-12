@@ -1,5 +1,5 @@
 '''
-Version: 2.0.0
+Version: 2.0.1
 @see https://github.com/DFRobot/pxt-DFRobot_MaqueenPlus_v20/blob/master/maqueenPlusV2.ts
 '''
 from micropython import const
@@ -93,11 +93,21 @@ def motor_calibration(motor: int, speed_factors: list):
     new speeds.
     ```
     motor_calibration(Motor.Right, [(20, 1.28), (200, 1.22)])
+    ```
     '''
     if motor > 1:
         print('No motor index', motor, 'found. Calibration is ignored')
         return
     _motor_calibration[motor] = sorted(speed_factors, key=lambda x: x[0])
+
+def motor_get_calibration(motor: int):
+    '''
+    Returns a copy of the calibration data for the given motor.
+    ```
+    motor_get_calibration(Motor.RIGHT) # => [(20, 1.28), (200, 1.22)]
+    ```
+    '''
+    return [s for s in _motor_calibration[motor]]
 
 def _get_speed(motor: int, speed: int):
     num_calibs = len(_motor_calibration[motor])
@@ -116,7 +126,11 @@ def _get_speed(motor: int, speed: int):
         return int(factor * speed)
     else:
         calibs = _motor_calibration[motor]
-        cal2 = next(x for x in calibs if x[0] > speed)
+        bigger = [x for x in calibs if x[0] > speed]
+        if len(bigger) > 0:
+            cal2 = bigger[0]
+        else:
+            cal2 = calibs[-1]
         idx_cal2 = calibs.index(cal2)
         if idx_cal2 > 0:
             cal1 = calibs[idx_cal2 - 1]
@@ -159,6 +173,7 @@ def motor_stop(motor: int = Motor.ALL):
     ```
     '''
     motor_run(motor, 0, 0)
+    
 
 def led_red(on: bool, led: int = Led.ALL):
     '''
