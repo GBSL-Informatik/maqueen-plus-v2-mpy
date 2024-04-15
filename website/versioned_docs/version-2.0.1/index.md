@@ -20,6 +20,7 @@ Kopieren Sie die Datei `maqueenplus.py` in den Projektordner, sie kann dann dire
 ![](images/microbit-project.png)
 
 ```py title="main.py"
+from microbit import *
 from maqueen import *
 
 motor_run(Motor.LEFT, 100)
