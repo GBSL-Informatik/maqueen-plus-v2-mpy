@@ -15,11 +15,11 @@ Eine Bibliothek zum Steuern und Auslesen von Sensordaten beim **Maqueen Plus V2.
 
 Auf https://python.microbit.org/v/3 finden Sie eine Online-IDE für MicroPython auf dem Micro:bit.
 
-Kopieren Sie die Datei `maqueenplus.py` in den Projektordner, sie kann dann direkt importtiert und gebraucht werden.
+Kopieren Sie die Datei `maqueenplus.py` in den Projektordner, sie kann dann direkt importiert und verwendet werden.
 
 ![](images/microbit-project.png)
 
-```py
+```py title="main.py"
 from maqueen import *
 
 motor_run(Motor.LEFT, 100)
