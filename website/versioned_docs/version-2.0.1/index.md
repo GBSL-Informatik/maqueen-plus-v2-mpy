@@ -24,9 +24,9 @@ from microbit import *
 from maqueen import *
 
 motor_run(Motor.LEFT, 100)
-sleep(150)
-motor_stop(Motor.LEFT)
-motor_run(Motor.ALL, 100)
+sleep(1000)
+motor_run(Motor.ALL, 1000)
+motor_stop(Motor.ALL)
 ```
 
 ## Bibliothek
