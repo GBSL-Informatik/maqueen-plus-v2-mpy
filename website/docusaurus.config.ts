@@ -61,7 +61,61 @@ const config: Config = {
 
     themeConfig: {
         // Replace with your project's social card
-        image: 'img/docusaurus-social-card.jpg',
+        image: 'img/maqueen-plus-v2.jpg',
+        metadata: [
+            {name: 'keywords', content: 'microbit, maqueen, robot, micro:bit, python, editor, micropython, library, pip, dfrobot, maqueen plus v2, maqueen plus, maqueen v2, maqueen plus v2 micropython, maqueen plus v2'}
+        ],
+        headTags: [
+            // Declare a <link> preconnect tag
+            {
+              tagName: 'link',
+              attributes: {
+                rel: 'preconnect',
+                href: 'https://gbsl-informatik.github.io/maqueen-plus-v2-mpy/',
+              },
+            },
+            // Declare some json-ld structured data
+            {
+              tagName: 'script',
+              attributes: {
+                type: 'application/ld+json',
+              },
+              innerHTML: JSON.stringify({
+                "@context": "https://schema.org/", 
+                "@type": "HowTo", 
+                "name": "Program Mico:Bit Maqueen V2 with Python",
+                "description": "Program the Maqueen Plus V2 from DFRobot with Python. This small library, written in micropython, establishes the connection to the maqueen robot. Control the motors, read the ultrasonic sensor to avoid crashes and control the color leds.",
+                "image": "https://gbsl-informatik.github.io/maqueen-plus-v2-mpy/img/maqueen-plus-v2.jpg",
+                "totalTime": "PT8M",
+                "tool": [{
+                  "@type": "HowToTool",
+                  "name": "Maqueen Plus V2"
+                },{
+                  "@type": "HowToTool",
+                  "name": "Micro:Bit"
+                }],
+                "step": [{
+                  "@type": "HowToStep",
+                  "text": "Copy the Library",
+                  "image": "https://gbsl-informatik.github.io/maqueen-plus-v2-mpy/img/maqueen-library.png",
+                  "name": "Copy the Library",
+                  "url": "https://gbsl-informatik.github.io/maqueen-plus-v2-mpy/docs/#bibliothek"
+                },{
+                  "@type": "HowToStep",
+                  "text": "In the Python Webeditor, create a file maqueen.py and paste the code.",
+                  "image": "https://gbsl-informatik.github.io/maqueen-plus-v2-mpy/img/microbit-project.png",
+                  "name": "Micropython Web Editor",
+                  "url": "https://python.microbit.org/v/3/project"
+                },{
+                  "@type": "HowToStep",
+                  "text": "Start coding - see the documentation as reference.",
+                  "image": "https://gbsl-informatik.github.io/maqueen-plus-v2-mpy/img/sample-program.png",
+                  "name": "Coding",
+                  "url": "https://gbsl-informatik.github.io/maqueen-plus-v2-mpy/docs/api/"
+                }]    
+              }),
+            },
+          ],
         navbar: {
             title: 'Maqueen Plus V2',
             logo: {
