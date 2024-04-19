@@ -186,7 +186,17 @@ const config: Config = {
                 },
             };
         }
-    ]
+    ],
+    scripts: [
+        // Object format.
+        {
+            src: 'https://umami.gbsl.website/tell-me.js',
+            ['data-website-id']: '7be6a26d-a716-4bfc-baea-4478f72047c4',
+            ['data-domains']: 'gbsl-informatik.github.io',
+            async: true,
+            defer: true
+        },
+    ],
 };
 
 export default config;
