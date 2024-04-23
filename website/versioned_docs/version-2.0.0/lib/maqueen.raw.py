@@ -242,6 +242,7 @@ def line_sensor_data(sensor: int):
         i2c.write(I2C_ADDR, bytearray([ADC4_REGISTER]))
         buffer = i2c.read(I2C_ADDR, 2)
         return buffer[1] << 8 | buffer[0]
+    return 0
 
 def line_sensor_data_all():
     '''

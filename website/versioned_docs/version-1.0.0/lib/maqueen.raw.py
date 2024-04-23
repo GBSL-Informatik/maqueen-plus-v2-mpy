@@ -252,6 +252,7 @@ def line_sensor_data(sensor: int):
             line_sensor_data(LineSensor.SENSOR_R1),
             line_sensor_data(LineSensor.SENSOR_R2)
         )
+    return 0
 
 def ultrasonic(trig = pin13, echo = pin14):
     '''
