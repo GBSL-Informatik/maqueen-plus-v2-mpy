@@ -63,7 +63,7 @@ const config: Config = {
         // Replace with your project's social card
         image: 'img/maqueen-plus-v2.jpg',
         metadata: [
-            {name: 'keywords', content: 'microbit, maqueen, robot, micro:bit, python, editor, micropython, library, pip, dfrobot, maqueen plus v2, maqueen plus, maqueen v2, maqueen plus v2 micropython, maqueen plus v2'}
+            {name: 'keywords', content: 'python tutorial robotik magueen maqueen plus EV3 dfrobot, python bibliothek, maqueen, programmieren, roboter, micro:bit, python, editor, micropython, library, pip, dfrobot, maqueen plus v2, maqueen plus, maqueen v2'}
         ],
         headTags: [
             // Declare a <link> preconnect tag
