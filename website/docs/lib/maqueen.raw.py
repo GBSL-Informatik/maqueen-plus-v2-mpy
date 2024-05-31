@@ -229,7 +229,7 @@ def line_sensor_all():
         1 if (data[0] & 0x01) == 0x01 else 0
     )
 
-def line_sensor_data(sensor: int):
+def line_sensor_data(sensor: int) -> int:
     '''
     Read the raw values of the line sensor.
     ```
