@@ -5,7 +5,7 @@ import deflistPlugin from './src/plugins/remark-deflist/plugin';
 
 const config: Config = {
     title: 'Maqueen Plus V2',
-    tagline: 'Micro:bit Robot with Micropython',
+    tagline: 'Micro:bit Roboter mit Micropython',
     favicon: 'img/favicon.ico',
 
     // Set the production url of your site here

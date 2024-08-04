@@ -38,6 +38,13 @@ export default function Home(): JSX.Element {
             </div>
             <div className='card__body'>
               <h4>Micropython: Micro:Bit + Maqueen Plus V2</h4>
+              <small>
+                Die Maqueen Plus V2 Bibliothek ermöglicht es, den <b>Maqueen Plus V2 </b>Roboter von <i>EV3 dfrobot </i> 
+                mit dem Micro:Bit über <b>Python </b>zu programmieren. Sie bietet Funktionen zur Steuerung der 
+                Motoren, Sensoren und LEDs. Die Bibliothek ist benutzerfreundlich und gut dokumentiert, 
+                was sowohl Anfängern als auch Fortgeschrittenen schnelle Erfolge und flexible 
+                Steuerungsmöglichkeiten bietet.
+              </small>
             </div>
             <div className="card__footer">
               <Link 
