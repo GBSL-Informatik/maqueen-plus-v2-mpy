@@ -5,7 +5,7 @@ import deflistPlugin from './src/plugins/remark-deflist/plugin';
 
 const config: Config = {
     title: 'Maqueen Plus V2',
-    tagline: 'Micro:bit Roboter mit Micropython',
+    tagline: 'Maqueen Plus V2-Bibliothek für Micro:Bit: Programmieren Sie den EV3 dfrobot-Roboter mit Micro-Python. Einfach & gut dokumentiert für Anfänger & Fortgeschrittene',
     favicon: 'img/favicon.ico',
 
     // Set the production url of your site here
@@ -28,6 +28,9 @@ const config: Config = {
     i18n: {
         defaultLocale: 'de',
         locales: ['de'],
+    },
+    future: {
+        experimental_faster: true
     },
 
     presets: [

@@ -25,7 +25,8 @@ export default function Home(): JSX.Element {
   return (
     <Layout
       title={siteConfig.title}
-      description="Micropython library for micro:bit and the Maqueen Plus v2">
+      description="Maqueen Plus V2-Bibliothek für Micro:Bit: Programmieren Sie den EV3 dfrobot-Roboter mit Python. Einfach & gut dokumentiert für Anfänger & Fortgeschrittene."
+    >
       <HomepageHeader />
       <main>
         <div className={clsx('feature-container')}>
