@@ -1,12 +1,12 @@
 '''
-Version: 2.0.1
+Version: 2.0.2
 @see https://github.com/DFRobot/pxt-DFRobot_MaqueenPlus_v20/blob/master/maqueenPlusV2.ts
 '''
 from micropython import const
 from microbit import i2c, display, Image, pin13, pin14, pin15, accelerometer, compass
 from machine import time_pulse_us
 from neopixel import NeoPixel
-from time import sleep_ms
+from time import sleep_ms, sleep_us, ticks_us, ticks_diff
 from math import sqrt, asin, cos, sin, atan2, pi
 
 class Motor:
@@ -62,8 +62,6 @@ RIGHT_MOTOR_REGISTER = const(0X02)
 LINE_STATE_REGISTER = const(0X1D)
 VERSION_CNT_REGISTER = const(0X32)
 VERSION_DATA_REGISTER = const(0X33)
-
-_ULTRASONIC_PULSE_LENGTH_US = const(500*58)
 
 _neo_pixel = NeoPixel(pin15, 4)
 _brightness = 0xff
@@ -275,34 +273,45 @@ def line_sensor_data_all():
         line_sensor_data(LineSensor.R2)
     )
 
-def ultrasonic(trig = pin13, echo = pin14):
+_last_distance_cm = 100_000 # 1km = 100'000cm
+_last_echo_time = ticks_us()
+
+def ultrasonic(trig = pin13, echo = pin14, cache_duration = 1_000_000) -> int:
     '''
-    Read the ultrasonic sensor.
+    Read the ultrasonic sensor. Result is the distance to next obstacle in cm.
+    If an error (timeout) occurs during the measurement, a distance of 100000cm = 1km is returned.
+    After a call to ultrasonic() a pause of at least 20ms should be taken, before another call is made.
+
     ```
     ultrasonic()
     ```
     '''
+    global _last_distance_cm, _last_echo_time
+    # send trigger impuls to ultrasonic sensor
     trig.write_digital(1)
-    sleep_ms(1)
+    sleep_us(10)
     trig.write_digital(0)
-    if echo.read_digital() == 0:
-        trig.write_digital(0)
-        trig.write_digital(1)
-        sleep_ms(20)
-        trig.write_digital(0)
-        data = time_pulse_us(echo, 1, _ULTRASONIC_PULSE_LENGTH_US)
-    else:
-        trig.write_digital(1)
-        trig.write_digital(0)
-        sleep_ms(20)
-        trig.write_digital(0)
-        data = time_pulse_us(echo, 1, _ULTRASONIC_PULSE_LENGTH_US)
-    data = data / 59
-    if data <= 0:
-        return 0
-    elif data >= 500:
-        return 500
-    return round(data)
+    # measure time to echo, timeout 0.1 s = 100'000 us ≙ 34 m
+    time_to_echo = time_pulse_us(echo, 1, 100_000)
+    dt = ticks_diff(ticks_us(), _last_echo_time)
+    _last_echo_time = ticks_us()
+ 
+    # if timeout while measuring -> return last measurement or 1km = 100000cm
+    if time_to_echo < 0:
+        # if the last measurement was less than <cache_duration> ago, return the last measurement
+        if dt < cache_duration:
+            return _last_distance_cm
+        return 100_000 # 1km = 100'000cm
+    else:  
+        # Speed of sound: 340m/s = 34cm/ms = 0.034cm/us
+        # distance = time_to_echo / 2 * speed of sound
+        distance = time_to_echo  / 2 * 0.034
+        # distances larger than 4m are limited to 4m (upper range of sensor)
+        if distance > 400:
+            _last_distance_cm = 400
+        else:
+            _last_distance_cm = round(distance)
+        return _last_distance_cm
 
 def version():
     '''
