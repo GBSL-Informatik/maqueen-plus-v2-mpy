@@ -6,7 +6,7 @@ from micropython import const
 from microbit import i2c, display, Image, pin13, pin14, pin15, accelerometer, compass
 from machine import time_pulse_us
 from neopixel import NeoPixel
-from time import sleep_ms, sleep_us, ticks_us
+from time import sleep_ms, sleep_us, ticks_us, ticks_diff
 from math import sqrt, asin, cos, sin, atan2, pi
 
 class Motor:
@@ -276,10 +276,10 @@ def line_sensor_data_all():
 _last_distance_cm = 100_000 # 1km = 100'000cm
 _last_echo_time = ticks_us()
 
-def ultrasonic(trig = pin13, echo = pin14, cache_duration = 500_000) -> int:
+def ultrasonic(trig = pin13, echo = pin14, cache_duration = 1_000_000) -> int:
     '''
     Read the ultrasonic sensor. Result is the distance to next obstacle in cm.
-    If an error (timeout) occurs during the measurement, a distance of 100000cm = 1km is returned.
+    If an error (timeout) occurs during the measurement, a distance of 100'000cm = 1km is returned.
     After a call to ultrasonic() a pause of at least 20ms should be taken, before another call is made.
 
     ```
@@ -291,18 +291,18 @@ def ultrasonic(trig = pin13, echo = pin14, cache_duration = 500_000) -> int:
     trig.write_digital(1)
     sleep_us(10)
     trig.write_digital(0)
-    # measure time to echo, timeout 0.1 s = 100000 us ≙ 34 m
+    # measure time to echo, timeout 0.1 s = 100'000 us ≙ 34 m
     time_to_echo = time_pulse_us(echo, 1, 100_000)
-    dt = ticks_us() - _last_echo_time
-    _last_echo_time = ticks_us()
+    dt = ticks_diff(ticks_us(), _last_echo_time)
  
-    # if timeout while measuring -> return last measurement or 1km = 100000cm
+    # if timeout while measuring -> return last measurement or 1km = 100'000cm
     if time_to_echo < 0:
         # if the last measurement was less than <cache_duration> ago, return the last measurement
         if dt < cache_duration:
             return _last_distance_cm
         return 100_000 # 1km = 100'000cm
-    else:  
+    else:
+        _last_echo_time = ticks_us()
         # Speed of sound: 340m/s = 34cm/ms = 0.034cm/us
         # distance = time_to_echo / 2 * speed of sound
         distance = time_to_echo  / 2 * 0.034

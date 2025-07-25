@@ -279,7 +279,7 @@ _last_echo_time = ticks_us()
 def ultrasonic(trig = pin13, echo = pin14, cache_duration = 1_000_000) -> int:
     '''
     Read the ultrasonic sensor. Result is the distance to next obstacle in cm.
-    If an error (timeout) occurs during the measurement, a distance of 100000cm = 1km is returned.
+    If an error (timeout) occurs during the measurement, a distance of 100'000cm = 1km is returned.
     After a call to ultrasonic() a pause of at least 20ms should be taken, before another call is made.
 
     ```
@@ -294,15 +294,15 @@ def ultrasonic(trig = pin13, echo = pin14, cache_duration = 1_000_000) -> int:
     # measure time to echo, timeout 0.1 s = 100'000 us ≙ 34 m
     time_to_echo = time_pulse_us(echo, 1, 100_000)
     dt = ticks_diff(ticks_us(), _last_echo_time)
-    _last_echo_time = ticks_us()
  
-    # if timeout while measuring -> return last measurement or 1km = 100000cm
+    # if timeout while measuring -> return last measurement or 1km = 100'000cm
     if time_to_echo < 0:
         # if the last measurement was less than <cache_duration> ago, return the last measurement
         if dt < cache_duration:
             return _last_distance_cm
         return 100_000 # 1km = 100'000cm
-    else:  
+    else:
+        _last_echo_time = ticks_us()
         # Speed of sound: 340m/s = 34cm/ms = 0.034cm/us
         # distance = time_to_echo / 2 * speed of sound
         distance = time_to_echo  / 2 * 0.034
