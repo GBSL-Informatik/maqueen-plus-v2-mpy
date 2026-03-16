@@ -33,6 +33,6 @@ motor_stop(Motor.ALL)
 ## Bibliothek
 
 
-<CodeBlock language="python" title="maqueen.py">
+<CodeBlock language="python" title="maqueen.py" showLineNumbers>
 {maqueen}
 </CodeBlock>
