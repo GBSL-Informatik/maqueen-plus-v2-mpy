@@ -6,7 +6,6 @@
 - [LED's RGB](./led-rgb.md)
 - [Liniensensor](./line-tracking.md)
 - [Ultraschallsensor](./ultrasonic.md)
-- [Kompass](./compass.md)
 
 Inspiriert von [👉 DFRobot pxt-DFRobot_MaqueenPlus_v20](https://github.com/DFRobot/pxt-DFRobot_MaqueenPlus_v20/blob/master/maqueenPlusV2.ts).
 
@@ -18,6 +17,32 @@ version() # => 'MBT0021-EN-2.1'
 ```
 
 ## Changelog
+
+### V2.1.0 (24.11.2026)
+
+#### 🧨 Breaking Changes
+- `mq_heading()`, `heading_diff(heading0)` und `heading_set_window_size(n)` wurden entfernt.
+
+#### 🎉 New Features
+- [Software-Kalibrierung der Liniensensoren](./line-tracking.md#software-kalibrierung): Für jeden Liniensensor kann ein eigener Schwellwert gesetzt werden. Ist eine Kalibrierung vorhanden, verwenden `line_sensor` und `line_sensor_all` diese Schwellwerte. Die Kalibrierung wird auf dem micro:bit gespeichert und bleibt nach einem Neustart erhalten.
+- `recalibrate()`: Interaktive Kalibrierung der Liniensensoren (Knopf A: messen, Knopf B: beenden).
+- `calibrate(thresholds, margin, persist)`: Setzt die Schwellwerte direkt. Ohne Schwellwerte wird die Kalibrierung gelöscht.
+- `get_calibration()`: Gibt die aktuellen Schwellwerte zurück.
+- `show_line_state()`: Zeigt in der obersten Zeile der LED-Matrix an, ob die Liniensensoren Schwarz oder Weiss sehen.
+
+#### 🐛 Bug Fixes
+- `ultrasonic`: Der Zeitpunkt der letzten Messung wird nur noch bei einer erfolgreichen Messung aktualisiert, damit der zwischengespeicherte Wert nach `cache_duration` korrekt verfällt.
+
+### V2.0.2 (25.07.2025)
+
+#### 🧨 Breaking Changes
+- `ultrasonic`: Die Messung wurde überarbeitet. Distanzen werden neu auf max. 400 cm (statt 500 cm) begrenzt. Wird kein Echo empfangen, wird nicht mehr `0` zurückgegeben, sondern der letzte Messwert (falls nicht älter als `cache_duration`) oder 100'000 cm (1 km).
+
+#### 🎉 New Features
+- `ultrasonic(trig, echo, cache_duration)`: Neuer Parameter `cache_duration` (Standard: 1 Sekunde = `1_000_000` Mikrosekunden), wie lange der letzte Messwert bei einem fehlenden Echo zurückgegeben wird.
+
+#### 🐛 Bug Fixes
+- `line_sensor_data`: Gibt bei einem unbekannten Sensor `0` statt `None` zurück.
 
 ### V2.0.1 (12.12.2023)
 

@@ -1,13 +1,14 @@
 '''
-Version: 2.0.2
+Version: 2.1.0
 @see https://github.com/DFRobot/pxt-DFRobot_MaqueenPlus_v20/blob/master/maqueenPlusV2.ts
 '''
 from micropython import const
-from microbit import i2c, display, Image, pin13, pin14, pin15, accelerometer, compass
+from microbit import i2c, display, Image, pin13, pin14, pin15, accelerometer, compass, button_a, button_b
+import os
 from machine import time_pulse_us
 from neopixel import NeoPixel
 from time import sleep_ms, sleep_us, ticks_us, ticks_diff
-from math import sqrt, asin, cos, sin, atan2, pi
+from math import sin, pi
 
 class Motor:
     LEFT = 0
@@ -195,7 +196,11 @@ def line_sensor(sensor: int):
     ```
     line_sensor(LineSensor.SENSOR_L1) # => 0 or 1
     ```
+    If a software calibration is present (see `calibrate` and `recalibrate`),
+    the value is evaluated with the calibrated thresholds.
     '''
+    if _line_thresholds:
+        return _line_evaluate(sensor, line_sensor_data(sensor))
     i2c.write(I2C_ADDR, bytearray([LINE_STATE_REGISTER]))
     data = i2c.read(I2C_ADDR, 1)
     if sensor == LineSensor.L2:
@@ -216,7 +221,12 @@ def line_sensor_all():
     line_sensor_all()
     # => (left2, left1, middle, right1, right2) # => list[0 or 1]
     ```
+    If a software calibration is present (see `calibrate` and `recalibrate`),
+    the values are evaluated with the calibrated thresholds.
     '''
+    if _line_thresholds:
+        raw = line_sensor_data_all()
+        return tuple(_line_evaluate(_LINE_ORDER[i], raw[i]) for i in range(5))
     i2c.write(I2C_ADDR, bytearray([LINE_STATE_REGISTER]))
     data = i2c.read(I2C_ADDR, 1)
     return (
@@ -272,6 +282,144 @@ def line_sensor_data_all():
         line_sensor_data(LineSensor.R1),
         line_sensor_data(LineSensor.R2)
     )
+
+# ---------------------------------------------------------------------------
+# Software calibration of the line sensors
+# ---------------------------------------------------------------------------
+# Order of the sensors in all tuples/lists: (L2, L1, M, R1, R2)
+_LINE_ORDER = (LineSensor.L2, LineSensor.L1, LineSensor.M, LineSensor.R1, LineSensor.R2)
+_CALIBRATION_FILE = 'line_calibration.txt'
+_line_thresholds = None # list of 5 thresholds (L2, L1, M, R1, R2) or None
+_line_margin = 20
+
+def _line_evaluate(sensor: int, value: int) -> int:
+    '''1 = black (value <= threshold + margin), 0 = white'''
+    limit = _line_thresholds[_LINE_ORDER.index(sensor)] + _line_margin
+    if limit > 255:
+        limit = 255
+    return 1 if value <= limit else 0
+
+def _save_calibration():
+    try:
+        with open(_CALIBRATION_FILE, 'w') as f:
+            f.write(' '.join(str(t) for t in _line_thresholds + [_line_margin]))
+    except OSError as e:
+        print('Could not save line calibration:', e)
+
+def _remove_calibration_file():
+    try:
+        os.remove(_CALIBRATION_FILE)
+    except OSError:
+        pass
+
+def _load_calibration():
+    global _line_thresholds, _line_margin
+    try:
+        with open(_CALIBRATION_FILE) as f:
+            values = [int(v) for v in f.read().split()]
+        if len(values) == 6:
+            _line_thresholds = values[:5]
+            _line_margin = values[5]
+    except (OSError, ValueError):
+        _line_thresholds = None
+
+def calibrate(thresholds: list = None, margin: int = 20, persist: bool = True):
+    '''
+    Set the software calibration of the line sensors.
+    thresholds: 5 raw values in the order (L2, L1, M, R1, R2), typically the raw
+    readings on a black surface. A sensor evaluates to 1 (black), when its raw
+    value is <= threshold + margin (max. 255), otherwise to 0 (white).
+    When no thresholds are provided, the calibration is deleted and the
+    hardware evaluation of the line sensors is used again.
+    persist: store the calibration in the file system (survives restarts,
+    but not flashing a new program).
+    ```
+    calibrate([40, 42, 38, 45, 41]) # => use these thresholds
+    calibrate() # => delete the calibration
+    ```
+    '''
+    global _line_thresholds, _line_margin
+    if not thresholds:
+        _line_thresholds = None
+        _remove_calibration_file()
+        return
+    if len(thresholds) != 5:
+        print('calibrate: 5 thresholds expected (L2, L1, M, R1, R2), got', len(thresholds))
+        return
+    _line_thresholds = [int(t) for t in thresholds]
+    _line_margin = int(margin)
+    if persist:
+        _save_calibration()
+
+def get_calibration():
+    '''
+    Returns a copy of the current line sensor thresholds (L2, L1, M, R1, R2)
+    or None, when no software calibration is present.
+    ```
+    get_calibration() # => [40, 42, 38, 45, 41]
+    ```
+    '''
+    return list(_line_thresholds) if _line_thresholds else None
+
+def show_line_state(sleep_for: int = 0):
+    states = line_sensor_all()
+    for x in range(5):
+        display.set_pixel(4 - x, 0, 9 if states[x] else 0)
+    if sleep_for > 0:
+        sleep_ms(sleep_for)
+
+def recalibrate(duration_s: int = 3, tolerance: float = 0.08, margin: int = 20):
+    '''
+    Interactive calibration of the line sensors. Place the robot with all
+    line sensors on the black surface.
+    - Button A: measure the raw values for `duration_s` seconds (countdown on display).
+      Success (all readings within +/- `tolerance` of the mean): shows a check
+      and stores the means as thresholds. Otherwise an X is shown.
+    - Button B: exit the calibration mode.
+    While waiting, the top row of the display shows the state of the line
+    sensors (L2, L1, M, R1, R2): LED on = black, LED off = white.
+    ```
+    recalibrate()
+    ```
+    '''
+    display.clear()
+    button_a.was_pressed() # reset pending presses
+    button_b.was_pressed()
+    while True:
+        if button_b.was_pressed():
+            display.clear()
+            return
+        if button_a.was_pressed():
+            samples = [[] for _ in range(5)]
+            for sec in range(duration_s, 0, -1):
+                display.show(sec)
+                start = ticks_us()
+                while ticks_diff(ticks_us(), start) < 1_000_000:
+                    raw = line_sensor_data_all()
+                    for i in range(5):
+                        samples[i].append(raw[i])
+                    sleep_ms(20)
+            means = [sum(s) / len(s) for s in samples]
+            ok = True
+            for i in range(5):
+                # at least +/- 3 to not be too strict on small values
+                allowed = max(means[i] * tolerance, 3)
+                if max(samples[i]) - means[i] > allowed or means[i] - min(samples[i]) > allowed:
+                    ok = False
+            if ok:
+                calibrate([round(m) for m in means], margin)
+                print('Line calibration:', get_calibration())
+                display.show(Image.YES)
+            else:
+                print('Line calibration failed, readings vary too much')
+                display.show(Image.NO)
+            sleep_ms(2000)
+            display.clear()
+            button_a.was_pressed()
+        show_line_state()
+        sleep_ms(50)
+
+_load_calibration()
 
 _last_distance_cm = 100_000 # 1km = 100'000cm
 _last_echo_time = ticks_us()
@@ -431,87 +579,3 @@ def led_rgb_off(led: int = ColorLED.ALL):
     if led < 0 or led > ColorLED.ALL:
         led = ColorLED.ALL
     led_rgb(0, led)
-
-# compass tilt compensation: https://ozzmaker.com/compass2/
-
-def mq_heading():
-    '''
-    returns the micro:bit heading when mounted on the maqueen [0-360]
-    ```
-    mq_heading()
-    ```
-
-    Tilt Compensation: @see https://ozzmaker.com/compass2/
-    Axis:
-    x -> x
-    z -> -y
-    y -> z
-    '''
-    acc_flat = accelerometer.get_values()
-    acc_raw = (acc_flat[0], acc_flat[2], -acc_flat[1])
-    mag_raw = (compass.get_x(), compass.get_z(), -compass.get_y())
-    
-    acc_norm = sqrt(acc_raw[0] * acc_raw[0] + acc_raw[1] * acc_raw[1] + acc_raw[2] * acc_raw[2])
-    try:
-        acc_x_norm = acc_raw[0]/acc_norm
-        acc_y_norm = acc_raw[1]/acc_norm
-
-        pitch = asin(acc_x_norm)
-        roll = -asin(acc_y_norm / cos(pitch))
-
-        mag_x_comp = mag_raw[0] * cos(pitch) + mag_raw[2] * sin(pitch)
-        mag_y_comp = mag_raw[0] * sin(roll) * sin(pitch) + mag_raw[1] * cos(roll) - mag_raw[2] * sin(roll) * cos(pitch)
-        heading = 180 * atan2(mag_y_comp, mag_x_comp) / pi
-        if heading < 0:
-            heading += 360
-        return heading
-    except:
-        return 0
-
-def heading_set_window_size(n: int = 1):
-    '''
-    set the window size for the heading buffer. For calculating the heading_diff, the mean of the last n values is used.
-    ```
-    heading_set_window_size(5)
-    ```
-    '''
-    global _heading_buffer_index
-    if n < 1:
-        _heading_window_size = 1
-    else:
-        _heading_window_size = n
-    _heading_buffer.clear()
-    for i in range(_heading_window_size):
-        _heading_buffer.append(0)
-    _heading_buffer_index = 0
-
-def _heading_append(heading: float):
-    global _heading_buffer_index
-    _heading_buffer[_heading_buffer_index] = heading
-    _heading_buffer_index = (_heading_buffer_index + 1) % _heading_window_size
-
-def _heading_mean():
-    if _heading_window_size == 1:
-        return _heading_buffer[0]
-    return sum(_heading_buffer) / _heading_window_size
-
-def heading_diff(heading0: float, apply_window: bool = True):
-    '''
-    returns the difference between an initial heading and the current mesaurement
-    ```
-    h0 = mq_heading()
-    # maqueen turned 10 degrees to the right
-    heading_diff(h0) # => 10
-    ```
-    '''
-    heading = mq_heading()
-    if apply_window:
-        _heading_append(heading)
-        current = _heading_mean()
-    else:
-        current = heading
-    angle = 180 - abs(abs(heading0 - current) - 180)
-    if (heading0 + angle) % 360 == current:
-        return -angle
-    else:
-        return angle
