@@ -20,9 +20,6 @@ version() # => 'MBT0021-EN-2.1'
 
 ### V2.1.0 (24.11.2026)
 
-#### 🧨 Breaking Changes
-- `mq_heading()`, `heading_diff(heading0)` und `heading_set_window_size(n)` wurden entfernt.
-
 #### 🎉 New Features
 - [Software-Kalibrierung der Liniensensoren](./line-tracking.md#software-kalibrierung): Für jeden Liniensensor kann ein eigener Schwellwert gesetzt werden. Ist eine Kalibrierung vorhanden, verwenden `line_sensor` und `line_sensor_all` diese Schwellwerte. Die Kalibrierung wird auf dem micro:bit gespeichert und bleibt nach einem Neustart erhalten.
 - `recalibrate()`: Interaktive Kalibrierung der Liniensensoren (Knopf A: messen, Knopf B: beenden).
@@ -31,7 +28,12 @@ version() # => 'MBT0021-EN-2.1'
 - `show_line_state()`: Zeigt in der obersten Zeile der LED-Matrix an, ob die Liniensensoren Schwarz oder Weiss sehen.
 
 #### 🐛 Bug Fixes
+
 - `ultrasonic`: Der Zeitpunkt der letzten Messung wird nur noch bei einer erfolgreichen Messung aktualisiert, damit der zwischengespeicherte Wert nach `cache_duration` korrekt verfällt.
+
+#### (🧨 Breaking Changes)
+
+- `mq_heading()`, `heading_diff(heading0)` und `heading_set_window_size(n)` wurden entfernt. Diese Funktionen wurden in keinem Projekt aktiv genutzt.
 
 ### V2.0.2 (25.07.2025)
 
